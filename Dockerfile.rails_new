@@ -1,0 +1,10 @@
+FROM ruby:2.6.6-buster
+
+RUN apt-get update -qq && apt-get install -y \
+	build-essential \
+	libpq-dev \
+	nodejs
+
+WORKDIR /app
+
+RUN gem install rails
