@@ -2,6 +2,8 @@
 
 ## rails on docker
 
+### railsコンテナを作成
+
 必要なファイル作成
 
 ```
@@ -9,7 +11,7 @@ touch Dockerfile
 touch docker-compose.yml
 ```
 
-`Dockerfile`を編集
+Dockerfileを編集
 
 ```dockerfile
 FROM ruby:2.6.6-buster
@@ -21,7 +23,7 @@ COPY hello_rails/Gemfile hello_rails/Gemfile.lock /app/
 RUN bundle install
 ```
 
-`docker-compose.yml`を編集
+docker-compose.ymlを編集
 
 ```yml
 version: "3.8"
@@ -38,7 +40,9 @@ services:
 docker-compose build
 ```
 
-`Dockerfile`を編集
+*エラー*
+
+Dockerfileを編集
 
 ```dockerfile
 FROM ruby:2.6.6-buster
@@ -73,7 +77,7 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 docker-compose build
 ```
 
-`docker-compose.yml`を編集
+docker-compose.ymlを編集
 
 ```yml
 version: "3.8"
@@ -96,6 +100,8 @@ services:
 ```
 docker-compose up -d
 ```
+
+*エラー*
 
 起動中のコンテナの確認
 
@@ -121,12 +127,70 @@ docker-compose run <サービス名> コマンド
 docker-compose exec <サービス名> コマンド
 ```
 
+起動中のコンテナを削除
+
+```
+docker-compose down
+```
+
+### DBコンテナを追加
+
+docker-compose.ymlを編集
+
+```yml
+version: "3.8"
+services:
+  db:
+    image: postgres:12.5
+    volumes:
+      - ./docker_data/db:/var/lib/postgresql/data:cached
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+  app:
+    ~ 略 ~
+    depends_on:
+      - db
+```
+
+hello_rails/config/database.ymlを編集
+
+```yml
+...
+
+development:
+  <<: *default
+  host: db
+  database: hello_rails
+  username: user
+  password: password
+
+...
+```
+
+コンテナを再び起動
+
+```
+docker-compose up -d
+```
+
+*エラー*
+
+### 試しにアプリケーションを作成
+
+```
+docker-compose exec app rails generate scaffold user name:string email:string
+docker-compose exec app rails db:migrate
+```
+
 ## （おまけ）debianでのパッケージインストールの補足
 
 - node
+
 https://github.com/nodesource/distributions/blob/master/README.md
 
 - yarn
+
 https://classic.yarnpkg.com/ja/docs/install/#debian-stable
 
 ## （おまけ）railsプロジェクトの作成
