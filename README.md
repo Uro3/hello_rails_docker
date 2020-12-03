@@ -176,6 +176,40 @@ docker-compose up -d
 
 *エラー*
 
+### 環境変数を使う
+
+hello_rails/config/database.ymlを編集
+
+```yml
+...
+
+development:
+  <<: *default
+  host: <%= ENV['DB_HOST'] %>
+  database: <%= ENV['DB'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+
+...
+```
+
+docker-compose.ymlを編集
+
+```yml
+version: "3.8"
+services:
+  ...
+  app:
+    ...
+    environment:
+      RAILS_ENV: development
+      DB_HOST: db
+      DB: hello_rails
+      DB_USERNAME: user
+      DB_PASSWORD: password
+    ...
+```
+
 ### 試しにアプリケーションを作成
 
 ```
