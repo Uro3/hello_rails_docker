@@ -8,6 +8,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
   app:
+    # image: uro3/rails_docker_test
     build:
       context: .
       dockerfile: Dockerfile
