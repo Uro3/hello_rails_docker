@@ -227,6 +227,16 @@ https://github.com/nodesource/distributions/blob/master/README.md
 
 https://classic.yarnpkg.com/ja/docs/install/#debian-stable
 
+## （おまけ）dockerレジストリへのpush
+
+```
+docker tag <ローカルにあるイメージ名> <レジストリ名>
+```
+
+```
+docker push <レジストリ名>
+```
+
 ## （おまけ）railsプロジェクトの作成
 
 ```
